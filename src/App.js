@@ -1,25 +1,55 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import "./styles.css";
 
-function App() {
+export default function App() {
+  const btnStyle = { padding: "0px 5px", margin: "5px 5px" };
+  const [step, setStep] = useState(1);
+  const [count, setCount] = useState(0);
+
+  const date = new Date();
+  date.setDate(date.getDate() + count * step);
+
+  function handleReset() {
+    setStep(1);
+    setCount(0);
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+      <div className="step">
+        Step:&nbsp;
+        <input
+          type="range"
+          min="1"
+          max="10"
+          value={step}
+          onChange={(e) => setStep(e.target.value)}
+        />
+        {step}
+      </div>
+      <div className="count">
+        Count:&nbsp;
+        <input
+          type="number"
+          value={count}
+          onChange={(e) => setCount(e.target.value)}
+        />
+      </div>
+      <div className="date">
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          {step * count === 0
+            ? "Today is "
+            : step * count > 0
+            ? `${Math.abs(step * count)} days from today is `
+            : `${Math.abs(step * count)} days ago was `}
+          {date.toDateString()}
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      </div>
+      {(step !== 1 || count !== 0) && (
+        <div className="reset">
+          <button onClick={handleReset}>Reset</button>
+        </div>
+      )}
     </div>
   );
 }
-
-export default App;
